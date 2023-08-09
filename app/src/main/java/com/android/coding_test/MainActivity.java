@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Spinner spinner;
     ArrayList<CustomItem> customList;
     int width = 150;
-
+    Button route;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         spinner = findViewById(R.id.spinner);
         customList = getCustomList();
+        route = findViewById(R.id.reRoute);
+
+
         CustomAdapter adapter = new CustomAdapter(this, customList);
         if (spinner != null) {
             spinner.setAdapter(adapter);
@@ -78,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         customList.add(new CustomItem("Car", R.drawable.car));
         customList.add(new CustomItem("Public Transportation", R.drawable.bus));
         return customList;
+
+
+
+
 
 
     }
@@ -114,7 +122,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 map.addMarker(options);
 
                 if (marker.size() >= 2) {
-
+                    route.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            marker.clear();
+                            map.clear();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                        }
+                    });
                     origin = marker.get(0);
                     dest = marker.get(1);
                     String url = getDirectionsUrl(origin, dest);
